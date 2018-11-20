@@ -1,0 +1,103 @@
+"""
+Fonctions du bloc environnement
+
+Auteur : Equipe Tbeng Meancheay
+Date : Année académique 2018-2019
+
+Entrées : La pression de vapeur saturante à 65°C, la pression de vapeur saturante ambiante,
+une pression de référence, une température de référence, l'humidité relative MAX,
+l'humidité relative ambiante, la pression atmosphérique, la température du ciel/de la salle,
+la puissance d'ensoleillement, la durée d'ensoleillement.
+
+Sorties: La température de rosée, l'humidité absolue, le flux direct,
+le flux indirect, la température du ciel.
+
+"""
+from math import log #Importation du lagarithme depuis le module math
+from math import pi #Imporation de valeur pi depuis le module math
+
+
+def formule_de_clapeyron1(x):
+    """
+     Utilisation de la formule de Clapeyron pour trouver la température de rosée
+     Entrée : La pression de vapeur saturante (ambiante ou 65°C) ???????
+     Résultat: La température de rosée
+    """
+    Tdp = 1/((1/Tref ) - ((R * log(x/Pref)) / Dhvap))
+    return Tdp
+
+def humidite_absolue(x,y,z):
+    """
+     Utilisation d'une formule reliant l'humidité relative et l'humidité absolue
+     Entrées : L'umidité relative Max/Amb, La pression de vapeur saturante 65°C/Amb, la pression atmosphérique
+     Résultat : L'humidité absolue Maximale et ambiante
+    """
+    HA = 0.622 * (x * y)/(z - (x * y))
+    return HA
+
+def flux_direct(x,y):
+    """
+     Entrées : La puissance d'ensoleillement, la durée d'ensoleillement
+     Résulat : Le flux solaire direct
+    """
+    Fd = x/y
+    return Fd
+
+def flux_indirect(x):
+    """
+     Utilisiation de la formule du corps noir
+     Entrée : La température du Ciel/de la salle
+     Résultat : Le flux solaire indirect
+    """
+    Fi = S * (x**4)
+    return Fi
+
+def temperature_du_ciel(x,y):
+    """
+     Entrées: La température de rosée, la température ambiante
+     Résultat: La température du ciel
+    """
+    x -= 273.15 #Température de rosée en °C
+    Tciel = y * (0.711 + 0.0056 * x + 7.3e-5 * (x**2) + 0.0013 * cos(2 * pi * t/24))**(1/4) #Quoi mettre dant t???????????
+    return Tciel
+
+#Inputs
+Psat_65 = float(input("La pression de vapeur sturante à 65°C en pascal = "))
+Psat_amb = float(input("La pression de vapeur saturante ambiante en pascal = "))
+Pref = float(input("Insérerer une pression de référence en pascal : "))
+Tref = float(input("Insérer une témpérature de référence en Kelvin : "))
+HR_max = float(input("L'humidité relative maximale du séchoir = "))
+HR_amb = float(input("L'humidité relative ambiante = "))
+P = float(input("La pression atmosphérique en pascal = "))
+T = float(input("La température de la salle(prototype!!!) en Kelvin = "))
+#T_Cambodge = float(input("La température ambiante en Kelvin = "))
+E = float(input("La puissance d'ensoleillement en W/m2 = "))
+dt = float(input("La durée d'ensoleillement en heure = "))   #PAS SUR EN HEURE !!!!!!!!!
+
+#Données
+Dhvap = 40650 #J/mol
+R = 8.314 # J/K.mol
+S = 5.67e-8 #W/m2.K4
+
+#Trouver le point de rosée
+Tdp = formule_de_clapeyron1(Psat) #Psat ambiant ou Psat à 65°C ?????????
+print("Le point de rosée = ", Tdp , "Kelvin")
+
+#Trouver l'humidité absolue maximale
+print("L'humidité absolue mximale = ", humidite_absolue(HR_max,Psat_65,P))
+
+#Trouver l'humidité absolue ambiante
+print("L'humidité absolue ambiante = ", humidite_absolue(HR_amb, Psat_amb, P))
+
+#Trouver le flux direct
+print("Le flux direct = ", flux_direct(E,dt), "W/m2")
+
+#Trouver le flux indirect pour le prototype (utilisation de la température de la salle)
+print("Le flux indirect = ", flux_indirect(T), "W/m2")
+
+#Trouver le flux indirect pour le Cambodge (Utilisation de la température du ciel)
+#print("Le flux indirect = ", flux_indirect(Tciel))
+
+#Trouver la température du ciel (utilisation de cette formule seulement pour le Cambodge)
+#Tciel = temperature_du_ciel(Tdp, T_Cambodge
+# print("La température du ciel = ", temperature_du_ciel(Tdp, T_Cambodge), "Kelvin")
