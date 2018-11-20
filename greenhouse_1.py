@@ -7,7 +7,7 @@ Température du plastique, Température du sol, Puissance par mètre carré
 
 But du programme:
 Ce programme nous permet de trouver les différentes inconnues du bloc "Effet de Serre"
-A l'aide d'une fonction utilisant le module "scipy", ce code nous permet de trouver nos inconnues
+A l'aide d'une fonction utilisant le module "scipy", ce code nous permet de trouver nos inconnues.
 """
 
 """Importation du module scipy.optimize"""
