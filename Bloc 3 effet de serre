@@ -1,0 +1,63 @@
+"""
+Fonctions du bloc effet de serre
+
+Auteur : Equipe Tbeng Meancheay
+Date : Année académique 2018-2019
+
+Entrées: Le flux Direct, le flux Indirect, la température souhaitée
+
+Sortie: la température du plastique, la température du sol, la puissance par metre carré
+
+But du programme:
+Ce programme nous permet de trouver les différentes inconnues du bloc "Effet de Serre".
+A l'aide d'une fonction utilisant le module "scipy", nous trouverons nos inconnues.
+"""
+
+from scipy.optimize import fsolve #Importation de fsolve depuis le module scipy.optimize
+
+def systeme_effet_de_serre(inconnues):
+    """
+     Entrée : une liste qui contient nos inconnues. La température du plastique, la température du sol,
+     la puissance par metre carré
+     Résultat : La température du plastique, la température du sol,
+     la puissance par metre carré
+    """
+    Tp = inconnues[0]
+    Ts = inconnues[1]
+    P = inconnues[2]
+    f = [[0]*1]*3 #Création d'une liste
+    f[0] = h * ((Tp - T) + (Ts - T)) - P #Equation n°1
+    f[1] = P + (s * (Tp**4)) - Fd - Fi #Equation n°2
+    f[2] = (s * (Ts**4)) + (h * (Ts-T)) - Fd - (s * (Tp**4)) #Equation n°3
+    return f
+
+#Initialisation des inconnues
+Tp, Ts, P = 0, 0, 0
+inconnues = [Tp, Ts, P]
+
+#Inputs
+Fd = float(input("Le flux direct en W/m2 = "))
+Fi = float(input("Le flux indirect en W/m2 = "))
+T = float(input("La température en Kelvin souhaitée à l'intérieur du séchoir = "))
+
+#Données
+s = 5.6697e-8 #Constante de Stefan-Boltzmann
+h = 4 #Coéficient d'écghange de chaleur (approximation)
+
+#Calculs pour trouver h (faire des recherches)
+# l = 1
+# H = 0.1
+# a = 27e-6
+# g = 9.81
+# µ = 1.91e-5
+# c = 29e-3 #conductivité thermique de l'air
+# b = 1/(273.15+65)
+# Dt = 37
+# Ray = ((H**3)*b*g*Dt)/(a*µ)
+# h = ((c)*(0.4)*((Ray)**(1/4)))/H
+
+#Résolution du problème
+solutions_Bloc3 = fsolve(systeme_effet_de_serre, inconnues)
+print("La température du plastique =" ,solutions_Bloc3[0])
+print("La température au niveau du sol =" ,solutions_Bloc3[1])
+print("La puissance par metre carré =" ,solutions_Bloc3[2])
