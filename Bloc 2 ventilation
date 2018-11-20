@@ -1,0 +1,50 @@
+"""
+Fonctions du bloc ventilation
+
+Auteur : Equipe Tbeng Meancheay
+Date : Année académique 2018-2019
+
+Entrées: La masse de l'aliment, l'humidité absolue ambiante, l'humidité absolue maximale, la température de séchage
+
+Sorties: Le débit d'air
+
+But: L'objectif de ce code est de trouver le débit d'air nécessaire pour notre séchoir. 
+"""
+
+def debit_air(x,y):
+    """
+     Entrées : La quantité d'eau dégagée par seconde, la différence entre l'humidité absolue MAX et Ambiante
+     Résultat : Le débit d'air
+    """
+    Q = x/y
+    return Q
+
+#Inputs
+masse_prod_sec = float(input("La masse de l'aliment que vous souhaitez sécher en kg = "))
+Yamb = float(input("L'humidité absolue ambiante = "))
+Ymax = float(input("L'humidité absolue maximale = "))
+dt = float(input("La durée de séchage en seconde = "))
+
+#Calculs pour arriver à J et dy
+#1° dy (différence en l'humidité absolue MAX et Ambiante)
+dy = Ymax - Yamb
+#2° J (Quantité d'eau dégagée par seconde)
+masse_eau_init = 3 * masse_prod_sec
+masse_eau_fin = 0.1 * masse_prod_sec
+y_init = masse_eau_init/masse_prod_sec
+y_fin = masse_eau_fin/masse_prod_sec
+
+m_produit = masse_prod_sec + masse_eau_init
+m_produit = masse_prod_sec + y_init * masse_prod_sec
+m_produit = masse_prod_sec * (1 + y_init)
+m_prod_sec = m_produit/(1 + y_init)
+
+d_masse_eau = masse_eau_fin - masse_eau_init
+d_masse_eau = masse_prod_sec * (y_fin - y_init)
+
+#OR, J = d_masse_eau/dt
+#C'est pourquoi, nous avons:
+J =  ((m_produit/(1 + y_init)) * (y_fin - y_init))/dt
+
+#Trouver le débit d'air
+print("Le débit d'air = ", debit_air(J, dy))
